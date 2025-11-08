@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Reservas - Hotel",
+    "version": "1.0.0",
+    "description": "API para gestionar reservas de hotel (CRUD + filtros)."
+  },
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Desarrollo" }
+  ],
+  "paths": {
+    "/api/reservas": {
+      "get": {
+        "summary": "Listar reservas (con filtros opcionales)",
+        "parameters": [
+          { "name": "hotel", "in": "query", "schema": { "type": "string" } },
+          { "name": "fecha_inicio", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "fecha_fin", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "tipo_habitacion", "in": "query", "schema": { "type": "string" } },
+          { "name": "estado", "in": "query", "schema": { "type": "string" } },
+          { "name": "num_huespedes", "in": "query", "schema": { "type": "string" }, "description": "ej: 3 o >5 para más de 5" }
+        ],
+        "responses": { "200": { "description": "Lista de reservas" } }
+      },
+      "post": {
+        "summary": "Crear una reserva",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "hotel": { "type": "string" },
+                  "tipo_habitacion": { "type": "string" },
+                  "num_huespedes": { "type": "integer" },
+                  "check_in": { "type": "string", "format": "date" },
+                  "check_out": { "type": "string", "format": "date" },
+                  "nombre_cliente": { "type": "string" },
+                  "contacto": { "type": "string" },
+                  "notas": { "type": "string" }
+                },
+                "required": ["hotel","tipo_habitacion","num_huespedes","check_in","check_out","nombre_cliente"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Reserva creada" }, "400": { "description": "Error en datos" } }
+      }
+    },
+    "/api/reservas/{id}": {
+      "get": {
+        "summary": "Obtener reserva por id",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Reserva" }, "404": { "description": "No encontrada" } }
+      },
+      "put": {
+        "summary": "Actualizar reserva por id",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Reserva actualizada" }, "400": { "description": "Error" }, "404": { "description": "No encontrada" } }
+      },
+      "delete": {
+        "summary": "Eliminar reserva por id",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Eliminada" }, "404": { "description": "No encontrada" } }
+      }
+    }
+  }
+}
